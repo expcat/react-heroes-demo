@@ -5,25 +5,30 @@ import { ModifyAction } from '@/hero-detail/actions';
 import { HERO_MODIFY } from '@/hero-detail/const';
 import { HeroesGetAction, IndexChangeAction } from '@/heroes/actions';
 import { HEROES_GET, INDEX_CHANGE } from '@/heroes/const';
+import {
+  MessageGetAction,
+  MessageClearAction,
+  MessageAddAction
+} from '@/message/actions';
+import { MESSAGE_GET, MESSAGE_CLEAR, MESSAGE_ADD } from '@/message/const';
+import { combineReducers } from 'redux';
 
-const initStoreState: StoreState = {
+const initHerosState: StoreState = {
   heroes: [],
   selectedIndex: -1
 };
 
-function reducer(
-  state: StoreState = initStoreState,
+function heroesReducer(
+  state: StoreState = initHerosState,
   action: ModifyAction | HeroesGetAction | IndexChangeAction
 ): StoreState {
-  let newState;
   switch (action.type) {
     case HERO_MODIFY:
-      newState = update(state, {
+      return update(state, {
         heroes: {
           [state.selectedIndex]: { name: { $set: action.payload.newName } }
         }
       });
-      return newState;
     case HEROES_GET:
       return update(state, {
         heroes: {
@@ -31,14 +36,36 @@ function reducer(
         }
       });
     case INDEX_CHANGE:
-      newState = update(state, {
+      return update(state, {
         selectedIndex: {
           $set: action.payload.newIndex
         }
       });
-      return newState;
     default:
       return state;
   }
 }
+
+const initMessagesStore: string[] = [];
+
+function messageReducer(
+  state: string[] = initMessagesStore,
+  action: MessageGetAction | MessageClearAction | MessageAddAction
+) {
+  switch (action.type) {
+    case MESSAGE_GET:
+      return state;
+    case MESSAGE_CLEAR:
+      return [];
+    case MESSAGE_ADD:
+      return update(state, { $push: [action.payload] });
+    default:
+      return state;
+  }
+}
+
+const reducer = combineReducers({
+  heroesReducer,
+  messageReducer
+});
 export default reducer;

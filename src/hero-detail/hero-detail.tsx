@@ -10,7 +10,7 @@ export interface IProps {
   onChange: (newName: string) => void;
 }
 
-class Herodetail extends React.Component<IProps, Hero> {
+class Herodetail extends React.PureComponent<IProps, Hero> {
   constructor(props: IProps) {
     super(props);
     this.state = props.hero;
