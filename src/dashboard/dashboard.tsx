@@ -1,20 +1,19 @@
 import React from 'react';
 import { Dispatch } from 'redux';
-import style from './heroes.module.scss';
 import { connect } from 'react-redux';
+import style from './dashboard.module.scss';
 import { Hero } from '@/model/hero';
-import Herodetail from '@/hero-detail/hero-detail';
-import { indexChange } from './actions';
-import { addMessage } from '@/message/actions';
 import { reducerType } from '@/reducers';
+import { addMessage } from '@/message/actions';
+import { indexChange } from '@/heroes/actions';
 
-export interface IProps {
+interface IProps {
   heroes: Hero[];
-  selectedIndex: number;
   indexChange: (newIndex: number) => void;
   addMessage: (message: string) => void;
 }
-class Heroes extends React.Component<IProps> {
+
+class Dashboard extends React.PureComponent<IProps> {
   onClick = (e: React.MouseEvent, id: number) => {
     const index = this.props.heroes.findIndex((hero) => hero.id === id);
     if (index > -1) {
@@ -26,31 +25,30 @@ class Heroes extends React.Component<IProps> {
     }
   };
   render() {
-    const heroes = this.props.heroes;
-    const selected = this.props.selectedIndex;
-    const hero = heroes[selected];
-    const heroesList = heroes.map((hero: Hero) => (
-      <li key={hero.id} onClick={(e) => this.onClick(e, hero.id)}>
-        <span className={style.badge}>{hero.id}</span>
-        {hero.name}
-      </li>
-    ));
     return (
-      <div>
-        <h2>我的英雄</h2>
-        <ul className={style.heroes}>{heroesList}</ul>
-        {selected > -1 ? <Herodetail hero={hero} /> : ''}
+      <div className={style.dashboard}>
+        <h3>顶级英雄</h3>
+        <div className={`${style.grid} ${style['grid-pad']}`}>
+          {this.props.heroes.map((hero: Hero) => (
+            <a
+              className={`${style['col-1-4']}`}
+              onClick={(e) => this.onClick(e, hero.id)}>
+              <div className={`${style.module} ${style.hero}`}>
+                <h4>{hero.name}</h4>
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
     );
   }
 }
 export default connect(
   (state: reducerType) => ({
-    heroes: state.heroesReducer.heroes,
-    selectedIndex: state.heroesReducer.selectedIndex
+    heroes: state.heroesReducer.heroes.slice(0, 4)
   }),
   (dispatch: Dispatch) => ({
     indexChange: (newIndex: number) => dispatch(indexChange(newIndex)),
     addMessage: (message: string) => dispatch(addMessage(message))
   })
-)(Heroes);
+)(Dashboard);

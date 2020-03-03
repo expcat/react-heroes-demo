@@ -64,6 +64,11 @@ function messageReducer(
   }
 }
 
+export type reducerType = {
+  heroesReducer: StoreState;
+  messageReducer: string[];
+};
+
 const reducer = combineReducers({
   heroesReducer,
   messageReducer
