@@ -1,37 +1,14 @@
-import {
-  HEROES_GET,
-  HEROES_GET_TYPE,
-  INDEX_CHANGE,
-  INDEX_CHANGE_TYPE
-} from './const';
 import { Hero } from '@/model/hero';
+import axios, { AxiosResponse } from 'axios';
 
-export interface IHEROES_GETaction {
-  type: HEROES_GET_TYPE;
-  payload: {
-    heroes: Hero[];
-  };
-}
+export const getHeroes = (): Promise<AxiosResponse<Hero[]>> => {
+  return axios.get<Hero[]>('/api/heroes');
+};
 
-export interface IINDEX_CHANGEaction {
-  type: INDEX_CHANGE_TYPE;
-  payload: {
-    newIndex: number;
-  };
-}
+export const addHero = (hero: Hero): Promise<AxiosResponse<Hero>> => {
+  return axios.post<Hero>('/api/heroes', hero);
+};
 
-// 定义 modifyAction 类型
-export type HeroesGetAction = IHEROES_GETaction;
-export type IndexChangeAction = IINDEX_CHANGEaction;
-
-// 修改Hero的方法
-export const getHeroes = (heroes: Hero[]): IHEROES_GETaction => ({
-  type: HEROES_GET,
-  payload: { heroes }
-});
-
-// 修改SelectedIndex
-export const indexChange = (newIndex: number): IINDEX_CHANGEaction => ({
-  type: INDEX_CHANGE,
-  payload: { newIndex }
-});
+export const delHero = (id: number): Promise<AxiosResponse<string>> => {
+  return axios.delete<string>('/api/heroes/' + id);
+};

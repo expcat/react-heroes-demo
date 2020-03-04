@@ -1,17 +1,10 @@
-import { HERO_MODIFY, HERO_MODIFY_TYPE } from './const';
+import { Hero } from '@/model/hero';
+import axios, { AxiosResponse } from 'axios';
 
-export interface IHERO_MODIFYaction {
-  type: HERO_MODIFY_TYPE;
-  payload: {
-    newName: string;
-  };
-}
+export const modifyHero = (hero: Hero): Promise<AxiosResponse<string>> => {
+  return axios.put<string>('/api/heroes', hero);
+};
 
-// 定义 modifyAction 类型
-export type ModifyAction = IHERO_MODIFYaction;
-
-// 修改Hero的方法
-export const modify = (newName: string): IHERO_MODIFYaction => ({
-  type: HERO_MODIFY,
-  payload: { newName }
-});
+export const getHero = (id: number): Promise<AxiosResponse<Hero>> => {
+  return axios.get<Hero>('/api/heroes/' + id);
+};
