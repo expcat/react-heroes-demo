@@ -12,6 +12,10 @@ import { addMessage } from './message/actions';
 if (environment.mock) {
   require('@/mock/mock');
 }
+let publicPath = '/';
+if (process.env.NODE_ENV === 'production') {
+  publicPath = environment.publicPath;
+}
 
 const title = '英雄之旅';
 
@@ -33,7 +37,7 @@ const HeroDetail = withRouter(
 store.dispatch(addMessage('初始化'));
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter basename="/">
+    <BrowserRouter basename={publicPath}>
       <h1>{title}</h1>
       <nav>
         <Link to="/dashboard">Dashboard</Link>
