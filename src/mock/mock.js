@@ -1,14 +1,11 @@
 import Mock from 'mockjs';
 import { HEROES } from '@/model/mockheroes';
 
-// const heroes = HEROES;
-
 Mock.mock('/api/heroes', 'get', () => {
   return HEROES;
 });
 
 Mock.mock('/api/heroes', 'put', (options) => {
-  // console.log(options);
   const hero = JSON.parse(options.body);
   const index = HEROES.findIndex((h) => h.id === hero.id);
   if (index > -1) {
@@ -18,7 +15,6 @@ Mock.mock('/api/heroes', 'put', (options) => {
 });
 
 Mock.mock('/api/heroes', 'post', (options) => {
-  // console.log(options);
   const hero = JSON.parse(options.body);
   hero.id =
     HEROES.length > 0 ? Math.max(...HEROES.map((hero) => hero.id)) + 1 : 11;
@@ -50,9 +46,7 @@ Mock.mock(
   RegExp(getHeroUrl + '\\?' + searchParam + '\\w'),
   'get',
   (options) => {
-    console.log(options);
     const name = options.url.replace(getHeroUrl + '?' + searchParam, '');
-    console.log(name);
     return HEROES.filter((h) => h.name.includes(name));
   }
 );
